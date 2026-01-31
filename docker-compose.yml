@@ -1,0 +1,126 @@
+services:
+  gateway:
+    build: ./gateway
+    container_name: docfleet_gateway
+    ports:
+      - "8000:8000"
+    environment:
+      # service discovery inside compose network
+      - GW_USER_SERVICE_URL=http://user_service:8001
+      - GW_DOCUMENT_SERVICE_URL=http://document_service:8002
+      - GW_DOWNLOADER_SERVICE_URL=http://downloader_service:8003
+      - GW_ML_SERVICE_URL=http://ml_service:8004
+
+      # http client behavior
+      - GW_HTTP_TIMEOUT_SECONDS=5.0
+      - GW_HTTP_RETRIES=2
+
+      # ML shaping / safety (from Phase 2C-1)
+      - GW_ML_MAX_DOCS_TO_RANK=200
+      - GW_ML_MAX_TEXT_CHARS=10000
+      - GW_DEFAULT_SEARCH_N=5
+      - GW_MAX_SEARCH_N=50
+    depends_on:
+      user_service:
+        condition: service_healthy
+      document_service:
+        condition: service_healthy
+      downloader_service:
+        condition: service_healthy
+      ml_service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  user_service:
+    build: ./user_service
+    container_name: docfleet_user_service
+    ports:
+      - "8001:8001"
+    environment:
+      - US_LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  document_service:
+    build: ./document_service
+    container_name: docfleet_document_service
+    ports:
+      - "8002:8002"
+    environment:
+      - DS_LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  downloader_service:
+    build: ./downloader_service
+    container_name: docfleet_downloader_service
+    ports:
+      - "8003:8003"
+    environment:
+      - DL_LOG_LEVEL=INFO
+      # Where downloader writes downloaded files inside container:
+      - DL_DATA_DIR=/app/data
+    volumes:
+      # persist downloaded docs across container restarts
+      - downloader_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.18.0
+    container_name: docfleet_mlflow
+    ports:
+      - "5000:5000"
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/mlruns
+    volumes:
+      - mlflow_db:/mlflow
+      - mlflow_artifacts:/mlflow/mlruns
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  ml_service:
+    build: ./ml_service
+    container_name: docfleet_ml_service
+    ports:
+      - "8004:8004"
+    environment:
+      - ML_LOG_LEVEL=INFO
+      - ML_MLFLOW_TRACKING_URI=http://mlflow:5000
+      - ML_REGISTERED_MODEL_NAME=docfleet-relevance-model
+      - ML_MODEL_ALIAS=champion
+      - ML_MAX_DOCS_PER_REQUEST=200
+      - ML_MAX_TEXT_CHARS=10000
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8004/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  mlflow_db:
+  mlflow_artifacts:
+  downloader_data:

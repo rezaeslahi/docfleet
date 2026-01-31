@@ -1,10 +1,10 @@
 from typing import List, Any
 from httpx import AsyncClient, Timeout, HTTPStatusError
-from core.config import settings
-from .sources import SourceDoc, SOURCES
+from app.core.config import settings
+from app.downloader.sources import SourceDoc, SOURCES
 from asyncio import Semaphore,create_task, gather
 from datetime import datetime, timezone
-from downloader.storage import save_file
+from app.downloader.storage import save_file
 import uuid
 import logging
 import os

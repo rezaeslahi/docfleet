@@ -5,10 +5,10 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, HTTPException, Query
 
 
-from core.logging import setup_logging
-from core.request_id import request_id_middleware
-from downloader.download import download_many
-from downloader.sources import SOURCES
+from app.core.logging import setup_logging
+from app.core.request_id import request_id_middleware
+from app.downloader.download import download_many
+from app.downloader.sources import SOURCES
 import uvicorn
 
 setup_logging()
