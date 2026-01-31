@@ -4,8 +4,8 @@ from typing import Any, Dict, Optional
 import httpx
 from fastapi import HTTPException
 
-from core.config import settings
-from core.request_id import REQUEST_ID_HEADER
+from app.core.config import settings
+from app.core.request_id import REQUEST_ID_HEADER
 
 
 async def _request_with_retries(

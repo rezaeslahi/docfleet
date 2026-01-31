@@ -17,8 +17,8 @@
 
 from fastapi import APIRouter, Request,HTTPException,status
 from typing import Optional,Dict,Any,List
-from clients.downloader_client import download_docs
-from clients.doc_client import ingest_documents
+from app.clients.downloader_client import download_docs
+from app.clients.doc_client import ingest_documents
 
 router = APIRouter(prefix="")
 

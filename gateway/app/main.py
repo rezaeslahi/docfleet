@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from core.request_id import request_id_middleware
-from api.routes_users import router as user_router
-from api.routes_documents import router as document_router
-from api.routes_ingest import router as ingest_router
-from core.logging import setup_logging
+from app.core.request_id import request_id_middleware
+from app.api.routes_users import router as user_router
+from app.api.routes_documents import router as document_router
+from app.api.routes_ingest import router as ingest_router
+from app.core.logging import setup_logging
 from app.api.routes_search import router as search_router
 import logging
 import uvicorn

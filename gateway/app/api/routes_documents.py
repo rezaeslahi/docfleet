@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from fastapi import APIRouter, Request
 
-from clients.doc_client import get_document, list_documents
+from app.clients.doc_client import get_document, list_documents
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 

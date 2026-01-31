@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, status
 from typing import Optional,Any,Dict
-from clients.user_client import list_users,get_user,delete_user,update_user,create_user
+from app.clients.user_client import list_users,get_user,delete_user,update_user,create_user
 
 router = APIRouter(prefix="/users")
 

@@ -1,7 +1,7 @@
 from httpx import Response, Timeout,AsyncClient
 from typing import Optional,Dict,Any
-from core.config import settings
-from core.request_id import REQUEST_ID_HEADER
+from app.core.config import settings
+from app.core.request_id import REQUEST_ID_HEADER
 from fastapi import HTTPException,status
 import asyncio
 async def _request_to_downloader_service(
