@@ -1,0 +1,23 @@
+project:
+  experiment_name : "decfleet-relevance"
+  registered_model_name: "docfleet-relevance-model"
+  alias_for_best: "champion"
+
+pipeline:
+  mode: "pandas" # "pandas" or "spark"
+
+data:
+  negative_sampling_ratio: 2
+  test_size: 0.2
+  random_seed: 42
+  mising_value_method: "drop"
+
+features:
+  max_features: 4000
+  ngram_min: 1
+  ngram_max: 3
+
+
+model:
+  grid_C: [0.2, 0.5, 1.5, 2.0]
+  max_iter: 500
