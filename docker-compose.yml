@@ -72,7 +72,8 @@ services:
       - DL_DATA_DIR=/app/data
     volumes:
       # persist downloaded docs across container restarts
-      - downloader_data:/app/data
+      - downloader_data:/app/data      
+      - ./data:/app/data
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health').read()"]
       interval: 10s
@@ -124,3 +125,4 @@ volumes:
   mlflow_db:
   mlflow_artifacts:
   downloader_data:
+  ./data:
