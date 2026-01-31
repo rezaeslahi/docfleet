@@ -125,4 +125,3 @@ volumes:
   mlflow_db:
   mlflow_artifacts:
   downloader_data:
-  ./data:
