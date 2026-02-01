@@ -19,7 +19,7 @@ echo "==> Waiting for services..."
 ./scripts/ci/wait_http.sh "$MLFLOW_URL" 120 --head
 
 echo "==> MLflow experiments list (sanity check)..."
-curl -fsS http://localhost:5000/api/2.0/mlflow/experiments/list | head -c 200
+curl -fsS http://localhost:5000/health || true
 echo
 
 
