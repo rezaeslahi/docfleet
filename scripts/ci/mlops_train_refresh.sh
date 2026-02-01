@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Configurable via env vars (nice for local + CI)
-DOCS_URL="${DOCS_URL:-http://localhost:8002/documents}"
+DOCS_URL="${DOCS_URL:-http://localhost:8002/document}"
 DOCS_HEALTH_URL="${DOCS_HEALTH_URL:-http://localhost:8002/health}"
 MLFLOW_URL="${MLFLOW_URL:-http://localhost:5000}"
 MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI:-http://127.0.0.1:5000}"
