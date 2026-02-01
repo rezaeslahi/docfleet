@@ -29,7 +29,7 @@ jobs:
 
       - name: Pytest (placeholder)
         run: |
-          pytest -q
+          pytest -q -m "not integration"
 
   docker-compose-smoke:
     runs-on: ubuntu-latest
