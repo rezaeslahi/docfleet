@@ -59,20 +59,10 @@ jobs:
           done
           curl -sf http://localhost:8000/health
 
+      - name: MLOps: Snapshot + Train + Refresh
+        run: ./scripts/ci/mlops_train_refresh.sh
       - name: Smoke test (health + search)
-        run: |
-          curl -sf http://localhost:8001/health
-          curl -sf http://localhost:8002/health
-          curl -sf http://localhost:8003/health
-          curl -sf http://localhost:8004/health
-          curl -sfI http://localhost:5000
-
-          # Search may fail if ML model not trained yet in compose registry.
-          # For Stage 4-1 we only assert health. We'll add training in Stage 4-2 (MLOps CI).
-          # Still, we can hit /search and accept non-200 for now.
-          curl -s -o /tmp/search.out -w "%{http_code}" "http://localhost:8000/search?query=test&n=3" | tee /tmp/search.code
-          echo "search_http_code=$(cat /tmp/search.code)"
-          cat /tmp/search.out | head -c 400 || true
+        run: ./scripts/ci/smoke.sh
 
       - name: Logs on failure
         if: failure()
