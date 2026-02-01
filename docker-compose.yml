@@ -90,8 +90,8 @@ services:
       --host 0.0.0.0
       --port 5000
       --backend-store-uri sqlite:////mlflow/mlflow.db
-      --default-artifact-root /mlflow/mlruns
       --serve-artifacts
+      --artifacts-destination /mlflow/mlruns
     volumes:
       - mlflow_db:/mlflow
       - mlflow_artifacts:/mlflow/mlruns

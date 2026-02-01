@@ -18,6 +18,11 @@ echo "==> Waiting for services..."
 ./scripts/ci/wait_http.sh "$ML_SERVICE_HEALTH_URL" 90
 ./scripts/ci/wait_http.sh "$MLFLOW_URL" 120 --head
 
+echo "==> MLflow experiments list (sanity check)..."
+curl -fsS http://localhost:5000/api/2.0/mlflow/experiments/list | head -c 200
+echo
+
+
 echo "==> Snapshot documents..."
 mkdir -p "$(dirname "$SNAPSHOT_PATH")"
 curl -fsS --retry 20 --retry-connrefused --retry-delay 1 --max-time 10 \
