@@ -59,8 +59,9 @@ jobs:
           done
           curl -sf http://localhost:8000/health
 
-      - name: MLOps: Snapshot + Train + Refresh
+      - name: MLOps; Snapshot + Train + Refresh
         run: ./scripts/ci/mlops_train_refresh.sh
+
       - name: Smoke test (health + search)
         run: ./scripts/ci/smoke.sh
 
